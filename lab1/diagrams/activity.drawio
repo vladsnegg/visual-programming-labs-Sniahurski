@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Activity - Оплата заказа" id="activity1">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Начальный узел -->
+        <mxCell id="start" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="380" y="40" width="30" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Действие 1 -->
+        <mxCell id="act1" value="Клиент вводит данные карты" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;" vertex="1" parent="1">
+          <mxGeometry x="300" y="110" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Действие 2 -->
+        <mxCell id="act2" value="Система отправляет запрос в платёжный шлюз" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;" vertex="1" parent="1">
+          <mxGeometry x="300" y="210" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Решение -->
+        <mxCell id="dec1" value="Оплата прошла?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="310" width="120" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Действие 3 (успех) -->
+        <mxCell id="act3" value="Заказ подтверждён и передан на кухню" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;" vertex="1" parent="1">
+          <mxGeometry x="450" y="430" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Действие 4 (неуспех) -->
+        <mxCell id="act4" value="Клиент получает уведомление об ошибке оплаты" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;" vertex="1" parent="1">
+          <mxGeometry x="80" y="430" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Действие 5 (повтор) -->
+        <mxCell id="act5" value="Клиент повторяет попытку оплаты" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;" vertex="1" parent="1">
+          <mxGeometry x="80" y="530" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Конечный узел -->
+        <mxCell id="end" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="525" y="540" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="endRing" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="520" y="535" width="40" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Стрелки -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="start" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="act2" target="dec1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="Да" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="dec1" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="Нет" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="dec1" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="act4" target="act5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="act5" target="act2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="30" y="560" />
+              <mxPoint x="30" y="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" parent="1" source="act3" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
