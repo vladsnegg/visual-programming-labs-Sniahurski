@@ -111,7 +111,7 @@ visual-programming-labs-Sniahurski/
     │   └── flowchart.md
     ├── diagrams/
     │   ├── process.bpmn
-    │   ├── process-bpmn.png
+    │   ├── diagram.svg
     │   ├── activity.drawio
     │   └── activity-uml.png
     └── report.md
