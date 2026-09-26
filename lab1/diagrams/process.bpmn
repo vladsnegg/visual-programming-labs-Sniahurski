@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_1"
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_FoodDelivery" isExecutable="false">
+
+    <bpmn:startEvent id="StartEvent_1" name="Клиент оформляет заказ">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:task id="Task_CheckStock" name="Проверить наличие блюд">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:exclusiveGateway id="Gateway_Stock" name="Блюда в наличии?">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3_No</bpmn:outgoing>
+      <bpmn:outgoing>Flow_3_Yes</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:task id="Task_ChangeOrder" name="Изменить заказ">
+      <bpmn:incoming>Flow_3_No</bpmn:incoming>
+      <bpmn:outgoing>Flow_Back</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_Pay" name="Оплатить заказ">
+      <bpmn:incoming>Flow_3_Yes</bpmn:incoming>
+      <bpmn:incoming>Flow_Back</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:exclusiveGateway id="Gateway_Payment" name="Оплата прошла?">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5_No</bpmn:outgoing>
+      <bpmn:outgoing>Flow_5_Yes</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:task id="Task_CancelOrder" name="Отменить заказ">
+      <bpmn:incoming>Flow_5_No</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToEndCancel</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:endEvent id="EndEvent_Cancel" name="Заказ отменён">
+      <bpmn:incoming>Flow_ToEndCancel</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:parallelGateway id="Gateway_ParallelSplit" name="Разделение">
+      <bpmn:incoming>Flow_5_Yes</bpmn:incoming>
+      <bpmn:outgoing>Flow_6_Cook</bpmn:outgoing>
+      <bpmn:outgoing>Flow_6_Courier</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <bpmn:task id="Task_Cook" name="Приготовить блюдо">
+      <bpmn:incoming>Flow_6_Cook</bpmn:incoming>
+      <bpmn:outgoing>Flow_7_Cook</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_FindCourier" name="Найти курьера">
+      <bpmn:incoming>Flow_6_Courier</bpmn:incoming>
+      <bpmn:outgoing>Flow_7_Courier</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:parallelGateway id="Gateway_ParallelJoin" name="Объединение">
+      <bpmn:incoming>Flow_7_Cook</bpmn:incoming>
+      <bpmn:incoming>Flow_7_Courier</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:parallelGateway>
+
+    <bpmn:task id="Task_Deliver" name="Доставить заказ">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:endEvent id="EndEvent_Success" name="Заказ получен">
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_CheckStock" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_CheckStock" targetRef="Gateway_Stock" />
+    <bpmn:sequenceFlow id="Flow_3_No" name="Нет" sourceRef="Gateway_Stock" targetRef="Task_ChangeOrder" />
+    <bpmn:sequenceFlow id="Flow_3_Yes" name="Да" sourceRef="Gateway_Stock" targetRef="Task_Pay" />
+    <bpmn:sequenceFlow id="Flow_Back" sourceRef="Task_ChangeOrder" targetRef="Task_Pay" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_Pay" targetRef="Gateway_Payment" />
+    <bpmn:sequenceFlow id="Flow_5_No" name="Нет" sourceRef="Gateway_Payment" targetRef="Task_CancelOrder" />
+    <bpmn:sequenceFlow id="Flow_5_Yes" name="Да" sourceRef="Gateway_Payment" targetRef="Gateway_ParallelSplit" />
+    <bpmn:sequenceFlow id="Flow_ToEndCancel" sourceRef="Task_CancelOrder" targetRef="EndEvent_Cancel" />
+    <bpmn:sequenceFlow id="Flow_6_Cook" sourceRef="Gateway_ParallelSplit" targetRef="Task_Cook" />
+    <bpmn:sequenceFlow id="Flow_6_Courier" sourceRef="Gateway_ParallelSplit" targetRef="Task_FindCourier" />
+    <bpmn:sequenceFlow id="Flow_7_Cook" sourceRef="Task_Cook" targetRef="Gateway_ParallelJoin" />
+    <bpmn:sequenceFlow id="Flow_7_Courier" sourceRef="Task_FindCourier" targetRef="Gateway_ParallelJoin" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Gateway_ParallelJoin" targetRef="Task_Deliver" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_Deliver" targetRef="EndEvent_Success" />
+
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_FoodDelivery">
+
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="200" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_CheckStock_di" bpmnElement="Task_CheckStock">
+        <dc:Bounds x="240" y="178" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Gateway_Stock_di" bpmnElement="Gateway_Stock" isMarkerVisible="true">
+        <dc:Bounds x="390" y="193" width="50" height="50" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_ChangeOrder_di" bpmnElement="Task_ChangeOrder">
+        <dc:Bounds x="390" y="60" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_Pay_di" bpmnElement="Task_Pay">
+        <dc:Bounds x="500" y="178" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Gateway_Payment_di" bpmnElement="Gateway_Payment" isMarkerVisible="true">
+        <dc:Bounds x="650" y="193" width="50" height="50" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_CancelOrder_di" bpmnElement="Task_CancelOrder">
+        <dc:Bounds x="630" y="320" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="EndEvent_Cancel_di" bpmnElement="EndEvent_Cancel">
+        <dc:Bounds x="662" y="442" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Gateway_ParallelSplit_di" bpmnElement="Gateway_ParallelSplit">
+        <dc:Bounds x="750" y="193" width="50" height="50" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_Cook_di" bpmnElement="Task_Cook">
+        <dc:Bounds x="850" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_FindCourier_di" bpmnElement="Task_FindCourier">
+        <dc:Bounds x="850" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Gateway_ParallelJoin_di" bpmnElement="Gateway_ParallelJoin">
+        <dc:Bounds x="1000" y="193" width="50" height="50" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_Deliver_di" bpmnElement="Task_Deliver">
+        <dc:Bounds x="1100" y="178" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="EndEvent_Success_di" bpmnElement="EndEvent_Success">
+        <dc:Bounds x="1252" y="200" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="188" y="218" />
+        <di:waypoint x="240" y="218" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="340" y="218" />
+        <di:waypoint x="390" y="218" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_No_di" bpmnElement="Flow_3_No">
+        <di:waypoint x="415" y="193" />
+        <di:waypoint x="415" y="100" />
+        <di:waypoint x="390" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_Yes_di" bpmnElement="Flow_3_Yes">
+        <di:waypoint x="440" y="218" />
+        <di:waypoint x="500" y="218" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Back_di" bpmnElement="Flow_Back">
+        <di:waypoint x="490" y="100" />
+        <di:waypoint x="550" y="100" />
+        <di:waypoint x="550" y="178" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="600" y="218" />
+        <di:waypoint x="650" y="218" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_No_di" bpmnElement="Flow_5_No">
+        <di:waypoint x="675" y="243" />
+        <di:waypoint x="675" y="320" />
+        <di:waypoint x="680" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_Yes_di" bpmnElement="Flow_5_Yes">
+        <di:waypoint x="700" y="218" />
+        <di:waypoint x="750" y="218" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ToEndCancel_di" bpmnElement="Flow_ToEndCancel">
+        <di:waypoint x="680" y="400" />
+        <di:waypoint x="680" y="460" />
+        <di:waypoint x="662" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_Cook_di" bpmnElement="Flow_6_Cook">
+        <di:waypoint x="775" y="193" />
+        <di:waypoint x="775" y="140" />
+        <di:waypoint x="850" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_Courier_di" bpmnElement="Flow_6_Courier">
+        <di:waypoint x="775" y="243" />
+        <di:waypoint x="775" y="280" />
+        <di:waypoint x="850" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_Cook_di" bpmnElement="Flow_7_Cook">
+        <di:waypoint x="950" y="140" />
+        <di:waypoint x="1025" y="140" />
+        <di:waypoint x="1025" y="193" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_Courier_di" bpmnElement="Flow_7_Courier">
+        <di:waypoint x="950" y="280" />
+        <di:waypoint x="1025" y="280" />
+        <di:waypoint x="1025" y="243" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="1050" y="218" />
+        <di:waypoint x="1100" y="218" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
+        <di:waypoint x="1200" y="218" />
+        <di:waypoint x="1252" y="218" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
