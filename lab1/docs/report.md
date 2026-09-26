@@ -27,7 +27,7 @@
 
 ### 2.1. BPMN-диаграмма
 
-![BPMN-диаграмма процесса](diagrams/process-bpmn.png)
+![BPMN-диаграмма процесса](diagrams/diagram.svg)
 
 - **Изображение (PNG):** [`diagrams/process-bpmn.png`](diagrams/process-bpmn.png)
 - **Исходный файл:** [`diagrams/process.bpmn`](diagrams/process.bpmn) (XML, нотация BPMN 2.0)
