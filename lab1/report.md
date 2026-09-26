@@ -27,9 +27,9 @@
 
 ### 2.1. BPMN-диаграмма
 
-![BPMN-диаграмма процесса](diagrams/process-bpmn.png)
+![BPMN-диаграмма процесса](diagrams/diagram.svg)
 
-- **Изображение (PNG):** [`diagrams/process-bpmn.png`](diagrams/process-bpmn.png)
+- **Изображение (PNG):** [`diagrams/process-bpmn.png`](diagrams/diagram.svg)
 - **Исходный файл:** [`diagrams/process.bpmn`](diagrams/process.bpmn) (XML, нотация BPMN 2.0)
 - **Элементы:** стартовое событие, **9 задач**, **5 шлюзов** (3 исключающих XOR + 2 параллельных AND), 3 конечных события
 - **Ветвления (XOR):** «Блюдо доступно?», «Клиент согласен?», «Оплата прошла?»
